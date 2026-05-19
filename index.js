@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const dotenv = require('dotenv');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 app.use(cors());
 app.use(express.json());
 dotenv.config();
@@ -30,12 +30,20 @@ async function run() {
       const result = await appointCollection.find().sort({rating: -1 }).limit(3).toArray();
       res.send(result);
     });
-    app.get('/appoints/:name', async (req, res) => {
+     
+    app.get('/appoints/search/:name', async (req, res) => {
       const name = req.params.name;
       const result = await appointCollection.find({name: { $regex: name, $options: 'i' }}).toArray();
       res.send(result);
     });
     
+    app.get('/appoints/:id', async (req, res) => {
+      const id = req.params.id;
+      const result = await appointCollection.findOne({_id: new ObjectId(id)});
+      res.send(result);
+    });
+   
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
