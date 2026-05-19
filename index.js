@@ -30,7 +30,11 @@ async function run() {
       const result = await appointCollection.find().sort({rating: -1 }).limit(3).toArray();
       res.send(result);
     });
-
+    app.get('/appoints/:name', async (req, res) => {
+      const name = req.params.name;
+      const result = await appointCollection.find({name: { $regex: name, $options: 'i' }}).toArray();
+      res.send(result);
+    });
     
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
