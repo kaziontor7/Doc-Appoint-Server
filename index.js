@@ -22,6 +22,7 @@ async function run() {
     await client.connect();
     const db = client.db("doc-appoint");
     const appointCollection = db.collection("appoints");
+    const bookingCollection = db.collection("bookings");
     app.get('/appoints', async (req, res) => {
       const result = await appointCollection.find().toArray();
       res.send(result);
@@ -40,6 +41,11 @@ async function run() {
     app.get('/appoints/:id', async (req, res) => {
       const id = req.params.id;
       const result = await appointCollection.findOne({_id: new ObjectId(id)});
+      res.send(result);
+    });
+    app.post('/bookings', async (req, res) => {
+      const booking = req.body;
+      const result = await bookingCollection.insertOne(booking);
       res.send(result);
     });
    
