@@ -43,11 +43,18 @@ async function run() {
       const result = await appointCollection.findOne({_id: new ObjectId(id)});
       res.send(result);
     });
+
     app.post('/bookings', async (req, res) => {
       const booking = req.body;
       const result = await bookingCollection.insertOne(booking);
       res.send(result);
     });
+
+    app.get('/bookings/:id', async (req,res)=>{
+      const id = req.params.id;
+      const result = await bookingCollection.find({userId: id}).toArray();
+      res.send(result);
+    })
    
 
     // Send a ping to confirm a successful connection
